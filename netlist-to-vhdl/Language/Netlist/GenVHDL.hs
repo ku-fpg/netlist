@@ -67,14 +67,17 @@ decl (NetDecl i r Nothing) = Just $
 decl (NetDecl i r (Just init)) = Just $
   text "signal" <+> text i <+> colon <+> slv_type r <+> text ":=" <+> expr init
 
-decl (MemDecl i Nothing dsize) = Just $
+decl (MemDecl i Nothing dsize Nothing) = Just $
     text "signal" <+> text i <+> colon <+> slv_type dsize
 
-decl (MemDecl i (Just asize) dsize) = Just $
+decl (MemDecl i (Just asize) dsize def) = Just $
   text "type" <+> mtype  <+> text "is" <+>
        text "array" <+> range asize <+> text "of" <+> slv_type dsize <> semi $$
-  text "signal" <+> text i <+> colon <+> mtype
+  text "signal" <+> text i <+> colon <+> mtype <> def_txt
  where mtype = text i <> text "_memory_type"
+       def_txt = case def of
+                  Nothing -> empty
+                  Just xs -> empty <+> text ":=" <+> parens (vcat $ punctuate comma (map expr xs))
 
 decl _d = Nothing
 
@@ -90,6 +93,8 @@ insts is = case catMaybes $ zipWith inst gensyms is of
 
 inst :: String -> Decl -> Maybe Doc
 inst _ (NetAssign i e) = Just $ text i <+> text "<=" <+> expr e
+
+inst _ (MemAssign i idx e) = Just $ text i <> parens (expr idx) <+> text "<=" <+> expr e
 
 inst gensym proc@(ProcessDecl evs) = Just $
     text gensym <+> colon <+> text "process" <> senlist <+> text "is" $$
