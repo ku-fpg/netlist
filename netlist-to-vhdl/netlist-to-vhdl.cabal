@@ -1,5 +1,5 @@
 name:           netlist-to-vhdl
-version:        0.2
+version:        0.2.1
 synopsis:       Convert a Netlist AST to VHDL
 description:    Convert a Netlist AST to VHDL
 category:       Language
