@@ -74,7 +74,11 @@ data Decl
   -- The first range is the most significant dimension.
   -- So, @MemDecl x (0, 31) (7, 0)@ corresponds to the following in Verilog:
   -- @reg [7:0] x [0:31]@
-  | MemDecl Ident (Maybe Range) (Maybe Range)
+  | MemDecl Ident (Maybe Range) (Maybe Range) (Maybe [Expr])
+
+  -- | These are permanent assignments to memory locations,
+  -- of the form mem[addr] = val
+  | MemAssign Ident Expr Expr
 
   -- | A module/entity instantiation.  The arguments are the name of the module,
   -- the name of the instance, the parameter assignments, the input port
@@ -249,11 +253,16 @@ instance Binary Decl where
                 NetAssign x1 x2 -> do putWord8 1
                                       put x1
                                       put x2
-                MemDecl x1 x2 x3 -> do putWord8 2
-                                       put x1
-                                       put x2
-                                       put x3
-                InstDecl x1 x2 x3 x4 x5 -> do putWord8 3
+                MemDecl x1 x2 x3 x4 -> do putWord8 2
+                                          put x1
+                                          put x2
+                                          put x3
+                                          put x4
+                MemAssign x1 x2 x3 -> do putWord8 3
+                                         put x1
+                                         put x2
+                                         put x3
+                InstDecl x1 x2 x3 x4 x5 -> do putWord8 4
                                               put x1
                                               put x2
                                               put x3
@@ -265,7 +274,7 @@ instance Binary Decl where
                                            put x3
                 InitProcessDecl x1 -> do putWord8 5
                                          put x1
-                CommentDecl x1 -> do putWord8 6
+                CommentDecl x1 -> do putWord8 7
                                      put x1
         get
           = do i <- getWord8
@@ -280,20 +289,25 @@ instance Binary Decl where
                    2 -> do x1 <- get
                            x2 <- get
                            x3 <- get
-                           return (MemDecl x1 x2 x3)
+                           x4 <- get
+                           return (MemDecl x1 x2 x3 x4)
                    3 -> do x1 <- get
+                           x2 <- get
+                           x3 <- get
+                           return (MemAssign x1 x2 x3)
+                   4 -> do x1 <- get
                            x2 <- get
                            x3 <- get
                            x4 <- get
                            x5 <- get
                            return (InstDecl x1 x2 x3 x4 x5)
-                   4 -> do x1 <- get
+                   5 -> do x1 <- get
                            x2 <- get
                            x3 <- get
                            return (ProcessDecl x1 x2 x3)
-                   5 -> do x1 <- get
-                           return (InitProcessDecl x1)
                    6 -> do x1 <- get
+                           return (InitProcessDecl x1)
+                   7 -> do x1 <- get
                            return (CommentDecl x1)
                    _ -> error "Corrupted binary data for Decl"
 
@@ -321,13 +335,17 @@ instance Binary Event where
 instance Binary Edge where
         put x
           = case x of
-                PosEdge -> putWord8 0
-                NegEdge -> putWord8 1
+                PosEdge   -> putWord8 0
+                NegEdge   -> putWord8 1
+                AsyncHigh -> putWord8 2
+                AsyncLow  -> putWord8 3
         get
           = do i <- getWord8
                case i of
                    0 -> return PosEdge
                    1 -> return NegEdge
+                   2 -> return AsyncHigh
+                   3 -> return AsyncLow
                    _ -> error "Corrupted binary data for Edge"
 
 
