@@ -268,8 +268,10 @@ instance Binary Decl where
                                               put x3
                                               put x4
                                               put x5
-                ProcessDecl x1 -> do putWord8 5
-                                     put x1
+                ProcessDecl x1 x2 x3 -> do putWord8 5
+                                           put x1
+                                           put x2
+                                           put x3
                 InitProcessDecl x1 -> do putWord8 6
                                          put x1
                 CommentDecl x1 -> do putWord8 7
@@ -340,8 +342,6 @@ instance Binary Edge where
                case i of
                    0 -> return PosEdge
                    1 -> return NegEdge
-                   2 -> return AsyncHigh
-                   3 -> return AsyncLow
                    _ -> error "Corrupted binary data for Edge"
 
 
