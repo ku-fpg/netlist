@@ -91,7 +91,7 @@ inst :: String -> Decl -> Maybe Doc
 inst _ (NetAssign i e) = Just $ text i <+> text "<=" <+> expr e
 inst _ (MemAssign i idx e) = Just $ text i <> parens (expr idx) <+> text "<=" <+> expr e
 
-inst gensym proc@(ProcessDecl evs) = Just $
+inst gensym (ProcessDecl (Event clk edge) Nothing s) = Just $
     text gensym <+> colon <+> text "process" <> senlist <+> text "is" $$
     text "begin" $$
     nest 2 (text "if" <+> nest 2 event <+> text "then" $$
