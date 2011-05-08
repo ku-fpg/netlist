@@ -300,13 +300,9 @@ instance Binary Decl where
                            x5 <- get
                            return (InstDecl x1 x2 x3 x4 x5)
                    5 -> do x1 <- get
-<<<<<<< HEAD
                            x2 <- get
                            x3 <- get
                            return (ProcessDecl x1 x2 x3)
-=======
-                           return (ProcessDecl x1)
->>>>>>> csdl/master
                    6 -> do x1 <- get
                            return (InitProcessDecl x1)
                    7 -> do x1 <- get
@@ -339,11 +335,6 @@ instance Binary Edge where
           = case x of
                 PosEdge   -> putWord8 0
                 NegEdge   -> putWord8 1
-<<<<<<< HEAD
-=======
-                AsyncHigh -> putWord8 2
-                AsyncLow  -> putWord8 3
->>>>>>> csdl/master
         get
           = do i <- getWord8
                case i of
