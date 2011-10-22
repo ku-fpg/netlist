@@ -76,6 +76,7 @@ decl (MemDecl i (Just asize) dsize def) = Just $
  where mtype = text i <> text "_memory_type"
        def_txt = case def of
                   Nothing -> empty
+                  Just [xs] -> empty <+> text ":=" <+> parens (text "0 =>" <+> expr xs)
                   Just xs -> empty <+> text ":=" <+> parens (vcat $ punctuate comma (map expr xs))
 
 decl _d = Nothing
@@ -274,6 +275,8 @@ binOp ShiftLeft = "sll"
 binOp ShiftRight = "srl"
 binOp RotateLeft = "rol"
 binOp RotateRight = "ror"
+binOp ShiftLeftArith = "sla"
+binOp ShiftRightArith = "sra"
 
 slv_type :: Maybe Range -> Doc
 slv_type Nothing = text "std_logic"

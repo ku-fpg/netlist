@@ -221,6 +221,7 @@ data BinaryOp
   | LessThan | LessEqual | GreaterThan | GreaterEqual -- relational
   | And | Nand | Or | Nor | Xor | Xnor                -- bitwise
   | ShiftLeft | ShiftRight | RotateLeft | RotateRight -- shift/rotate
+  | ShiftLeftArith | ShiftRightArith                  -- arithmetical shift
   deriving (Eq, Ord, Show, Data, Typeable)
 
 -- -----------------------------------------------------------------------------
@@ -567,6 +568,8 @@ instance Binary BinaryOp where
                 ShiftRight -> putWord8 23
                 RotateLeft -> putWord8 24
                 RotateRight -> putWord8 25
+                ShiftLeftArith -> putWord8 26
+                ShiftRightArith -> putWord8 27
         get
           = do i <- getWord8
                case i of
@@ -596,5 +599,7 @@ instance Binary BinaryOp where
                    23 -> return ShiftRight
                    24 -> return RotateLeft
                    25 -> return RotateRight
+                   26 -> return ShiftLeftArith
+                   27 -> return ShiftRightArith
                    _ -> error "Corrupted binary data for BinaryOp"
 -- GENERATED STOP
