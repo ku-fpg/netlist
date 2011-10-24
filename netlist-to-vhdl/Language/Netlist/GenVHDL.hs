@@ -73,7 +73,7 @@ decl (MemDecl i (Just asize) dsize def) = Just $
   text "type" <+> mtype  <+> text "is" <+>
        text "array" <+> range asize <+> text "of" <+> slv_type dsize <> semi $$
   text "signal" <+> text i <+> colon <+> mtype <> def_txt
- where mtype = text i <> text "_memory_type"
+ where mtype = text i <> text "_type"
        def_txt = case def of
                   Nothing -> empty
                   Just [xs] -> empty <+> text ":=" <+> parens (text "0 =>" <+> expr xs)
