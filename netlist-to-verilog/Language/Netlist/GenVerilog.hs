@@ -65,7 +65,7 @@ mk_decl (NetDecl x mb_range mb_expr)
 mk_decl (NetAssign x expr)
   = [V.AssignItem Nothing Nothing [mkAssign x expr]]
 
-mk_decl (MemDecl x mb_range1 mb_range2)
+mk_decl (MemDecl x mb_range1 mb_range2 Nothing) -- Added Nothing to get this module to compile (amm)
   = [V.RegDeclItem (V.RegDecl V.Reg_reg (fmap mk_range mb_range2)
                     [case mb_range1 of
                        Nothing -> V.RegVar (mk_ident x) Nothing
@@ -87,25 +87,26 @@ mk_decl (InitProcessDecl stmt)
 mk_decl (CommentDecl str)
   = [V.CommentItem str]
 
-mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
-  = [V.AlwaysItem (V.EventControlStmt e (Just s))]
-  where
-    e    = V.EventControlExpr event
-    s    = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
+-- Commented out to make this module compile
+-- mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
+--   = [V.AlwaysItem (V.EventControlStmt e (Just s))]
+--   where
+--     e    = V.EventControlExpr event
+--     s    = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
 
-    (event, cond) = edge_helper edge clk
+--     (event, cond) = edge_helper edge clk
 
-mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
-         (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
-  = [V.AlwaysItem (V.EventControlStmt e (Just s1))]
-  where
-    e = V.EventControlExpr (V.EventOr clk_event reset_event)
+-- mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
+--          (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
+--   = [V.AlwaysItem (V.EventControlStmt e (Just s1))]
+--   where
+--     e = V.EventControlExpr (V.EventOr clk_event reset_event)
 
-    s1    = V.IfStmt reset_cond (Just (mk_stmt reset_stmt)) (Just s2)
-    s2    = V.IfStmt clk_cond   (Just (mk_stmt stmt)) Nothing
+--     s1    = V.IfStmt reset_cond (Just (mk_stmt reset_stmt)) (Just s2)
+--     s2    = V.IfStmt clk_cond   (Just (mk_stmt stmt)) Nothing
 
-    (clk_event, clk_cond) = edge_helper clk_edge clk
-    (reset_event, reset_cond) = edge_helper reset_edge reset
+--     (clk_event, clk_cond) = edge_helper clk_edge clk
+--     (reset_event, reset_cond) = edge_helper reset_edge reset
 
 edge_helper :: Edge -> V.Expression -> (V.EventExpr, V.Expression)
 edge_helper PosEdge x = (V.EventPosedge x, x)
