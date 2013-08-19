@@ -86,7 +86,7 @@ instance Show Sign where
   show Pos = "+"
   show Neg = "-"
 
-intExpr :: Integral a => a -> Expression
+intExpr :: (Show a, Integral a) => a -> Expression
 intExpr x = ExprNum (IntNum Nothing Nothing Nothing (show x))
 
 data Number
