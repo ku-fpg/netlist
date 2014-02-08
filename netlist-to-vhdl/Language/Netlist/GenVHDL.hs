@@ -16,7 +16,7 @@ module Language.Netlist.GenVHDL(genVHDL) where
 import Language.Netlist.AST
 
 import Text.PrettyPrint
-import Data.Maybe(catMaybes)
+import Data.Maybe(catMaybes, mapMaybe)
 
 
 -- | Generate a 'Language.Netlist.AST.Module' as a VHDL file . The ['String'] argument
@@ -56,8 +56,7 @@ architecture m = text "architecture" <+> text "str" <+> text "of" <+>  text (mod
                  text "end" <+> text "architecture" <+> text "str" <> semi
 
 decls :: [Decl] -> Doc
-decls [] = empty
-decls ds = (vcat $ punctuate semi $ catMaybes $ map decl ds) <> semi
+decls = vcat . map (<> semi) . mapMaybe decl
 
 decl :: Decl -> Maybe Doc
 decl (NetDecl i r Nothing) = Just $
@@ -82,10 +81,7 @@ decl (MemDecl i (Just asize) dsize def) = Just $
 decl _d = Nothing
 
 insts ::  [Decl] -> Doc
-insts [] = empty
-insts is = case catMaybes $ zipWith inst gensyms is of
-             [] -> empty
-             is' -> (vcat $ punctuate semi is') <> semi
+insts = vcat . map (<> semi) . catMaybes . zipWith inst gensyms
   where gensyms = ["proc" ++ show i | i <- [(0::Integer)..]]
 
 inst :: String -> Decl -> Maybe Doc
