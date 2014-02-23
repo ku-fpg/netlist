@@ -337,11 +337,11 @@ instance Show PrimType where
 
 data Instance
   = Instance
-    Ident                             -- ^ Name of the module (not the instance)
-    (Either [Expression] [Parameter]) -- ^ A list of delay expressions or
+    Ident                             -- Name of the module (not the instance)
+    (Either [Expression] [Parameter]) -- A list of delay expressions or
                                       -- unnamed parameter expressions, or a
                                       -- list of named parameter assignments
-    [Inst]                            -- ^ Module instances
+    [Inst]                            -- Module instances
   deriving (Eq, Ord, Show, Data, Typeable)
 
 -- the spec says this is just one or more expressions, but that doesn't seem
