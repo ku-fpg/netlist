@@ -22,7 +22,7 @@ Library
 
   exposed-modules:      Language.Netlist.GenVerilog
 
-  build-depends:        netlist == 0.2, verilog == 0.2
+  build-depends:        netlist >= 0.2, verilog == 0.2
 
   if flag(base4)
      build-depends:   base == 4.*
