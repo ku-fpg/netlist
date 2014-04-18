@@ -27,3 +27,7 @@ Library
      build-depends:   base == 4.*
   else
      build-depends:   base == 3.*
+
+source-repository this
+  type:     git
+  location: git://github.com/gergoerdi/netlist.git
