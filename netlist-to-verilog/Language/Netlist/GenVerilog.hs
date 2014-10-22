@@ -87,14 +87,12 @@ mk_decl (InitProcessDecl stmt)
 mk_decl (CommentDecl str)
   = [V.CommentItem str]
 
--- Commented out to make this module compile
--- mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
---   = [V.AlwaysItem (V.EventControlStmt e (Just s))]
---   where
---     e    = V.EventControlExpr event
---     s    = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
-
---     (event, cond) = edge_helper edge clk
+mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
+  = [V.AlwaysItem (V.EventControlStmt e (Just s))]
+  where
+    e = V.EventControlExpr event
+    s = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
+    (event, cond) = edge_helper edge clk
 
 -- mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
 --          (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
