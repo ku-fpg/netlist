@@ -91,8 +91,11 @@ mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
   = [V.AlwaysItem (V.EventControlStmt e (Just s))]
   where
     e = V.EventControlExpr event
-    s = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
-    (event, cond) = edge_helper edge clk
+    s = mk_stmt stmt
+    (event, _) = edge_helper edge clk
+    -- conal: simplified from below, removing redundant (I think) conditional.
+    -- s = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
+    -- (event, cond) = edge_helper edge clk
 
 -- mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
 --          (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
