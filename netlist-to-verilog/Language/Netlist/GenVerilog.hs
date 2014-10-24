@@ -65,12 +65,16 @@ mk_decl (NetDecl x mb_range mb_expr)
 mk_decl (NetAssign x expr)
   = [V.AssignItem Nothing Nothing [mkAssign x expr]]
 
-mk_decl (MemDecl x mb_range1 mb_range2 Nothing) -- Added Nothing to get this module to compile (amm)
+mk_decl (MemDecl x mb_range1 mb_range2 startMb)
   = [V.RegDeclItem (V.RegDecl V.Reg_reg (fmap mk_range mb_range2)
                     [case mb_range1 of
-                       Nothing -> V.RegVar (mk_ident x) Nothing
+                       Nothing -> V.RegVar (mk_ident x) (fmap mk_exprs startMb)
                        Just r  -> V.MemVar (mk_ident x) (mk_range r)
                     ])]
+ where
+   mk_exprs :: [Expr] -> V.Expression
+   mk_exprs [e] = mk_expr e
+   mk_exprs es  = mk_expr (ExprConcat es)
 
 mk_decl (InstDecl mod_name inst_name params inputs outputs)
   = [V.InstanceItem (V.Instance (mk_ident mod_name) v_params [inst])]
