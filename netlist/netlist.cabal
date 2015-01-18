@@ -36,3 +36,4 @@ Library
 source-repository this
   type:     git
   location: git://github.com/gergoerdi/netlist.git
+  tag:      netlist-0.3.2
