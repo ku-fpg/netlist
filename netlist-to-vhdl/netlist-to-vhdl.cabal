@@ -1,5 +1,5 @@
 name:           netlist-to-vhdl
-version:        0.3.1
+version:        0.3.2
 synopsis:       Convert a Netlist AST to VHDL
 description:    Convert a Netlist AST to VHDL
 category:       Language
@@ -8,7 +8,7 @@ license-file:   LICENSE
 copyright:      Copyright (c) 2010 University of Kansas
 author:         Garrin Kimmell
 maintainer:     garrin.kimmell@gmail.com
-package-url:    git://github.com/pheaver/netlist-verilog.git
+package-url:    git://github.com/ku-fpg/netlist.git
 build-type:     Simple
 cabal-version:  >=1.6
 
@@ -27,3 +27,12 @@ Library
      build-depends:   base == 4.*
   else
      build-depends:   base == 3.*
+
+source-repository head
+  type:     git
+  location: git://github.com/ku-fpg/netlist.git
+
+source-repository this
+  type:     git
+  location: git://github.com/ku-fpg/netlist.git
+  tag:      netlist-to-vhdl-0.3.2
