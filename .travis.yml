@@ -11,8 +11,8 @@ install:
   - cabal install netlist/ verilog/ -j --only-dependencies
 
 script:
-  - ( cd netlist/ ; cabal configure ; cabal install )
-  - ( cd verilog/ ; cabal configure ; cabal install )
-  - ( cd netlist-to-vhdl; cabal install -j --only-dependencies; cabal configure ; cabal install )
-  - ( cd netlist-to-verilog; cabal install -j --only-dependencies; cabal configure ; cabal install )
+  - ( cd netlist/ ; cabal configure ; cabal build ; cabal install )
+  - ( cd verilog/ ; cabal configure ; cabal build ; cabal install )
+  - ( cd netlist-to-vhdl; cabal install -j --only-dependencies; cabal configure ; cabal build )
+  - ( cd netlist-to-verilog; cabal install -j --only-dependencies; cabal configure ; cabal build )
 
