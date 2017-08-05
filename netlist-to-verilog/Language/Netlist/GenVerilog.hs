@@ -19,6 +19,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE ViewPatterns #-}
 
+{-# OPTIONS_GHC -Wall #-}
+
 -- TODO: endianness - currently we're hardcoded to little endian verilog
 
 module Language.Netlist.GenVerilog ( mk_module
@@ -112,6 +114,10 @@ mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
 
 --     (clk_event, clk_cond) = edge_helper clk_edge clk
 --     (reset_event, reset_cond) = edge_helper reset_edge reset
+
+mk_decl decl =
+  error ("Language.Netlist.GenVerilog.mk_decl: unexpected decl "
+         ++ show decl) 
 
 edge_helper :: Edge -> V.Expression -> (V.EventExpr, V.Expression)
 edge_helper PosEdge x = (V.EventPosedge x, x)
@@ -245,5 +251,10 @@ binary_op ShiftLeft    = V.ShiftLeft
 binary_op ShiftRight   = V.ShiftRight
 binary_op RotateLeft   = error "GenVerilog: no left-rotate operator in Verilog"
 binary_op RotateRight  = error "GenVerilog: no right-rotate operator in Verilog"
+
+binary_op op =
+  error ("Language.Netlist.GenVerilog.binary_op: unexpected op "
+         ++ show op) 
+
 
 -- -----------------------------------------------------------------------------
