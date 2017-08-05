@@ -30,12 +30,12 @@ genVHDL m others = render vhdl ++ "\n"
 
 imports :: [String] -> Doc
 imports others = vcat
-	[ text "library IEEE" <> semi
+        [ text "library IEEE" <> semi
         , text "use IEEE.STD_LOGIC_1164.ALL" <> semi
         , text "use IEEE.NUMERIC_STD.ALL" <> semi
-	] $$ vcat [
+        ] $$ vcat [
           text ("use " ++ other) <> semi
-	| other <- others
+        | other <- others
         ]
 
 
@@ -62,8 +62,8 @@ decl :: Decl -> Maybe Doc
 decl (NetDecl i r Nothing) = Just $
   text "signal" <+> text i <+> colon <+> slv_type r
 
-decl (NetDecl i r (Just init)) = Just $
-  text "signal" <+> text i <+> colon <+> slv_type r <+> text ":=" <+> expr init
+decl (NetDecl i r (Just init')) = Just $
+  text "signal" <+> text i <+> colon <+> slv_type r <+> text ":=" <+> expr init'
 
 decl (MemDecl i Nothing dsize Nothing) = Just $
     text "signal" <+> text i <+> colon <+> slv_type dsize
@@ -121,8 +121,8 @@ inst gensym (ProcessDecl (Event clk clk_edge)
                     NegEdge -> expr reset <+> text "= '0'"
 
 
-inst _ (InstDecl nm inst gens ins outs) = Just $
-  text inst <+> colon <+> text "entity" <+> text nm $$
+inst _ (InstDecl nm inst' gens ins outs) = Just $
+  text inst' <+> colon <+> text "entity" <+> text nm $$
        gs $$
        ps
  where
@@ -147,7 +147,7 @@ inst gensym (InitProcessDecl s) = Just $
 
 -- TODO: get multline working
 inst _ (CommentDecl msg) = Just $
-	(vcat [ text "--" <+> text m | m <- lines msg ])
+    (vcat [ text "--" <+> text m | m <- lines msg ])
 
 inst _ _d = Nothing
 
@@ -220,7 +220,7 @@ expr (ExprCase _ [] Nothing) = error "VHDL does not support non-defaulted ExprCa
 expr (ExprCase _ [] (Just e)) = expr e
 expr (ExprCase e (([],_):alts) def) = expr (ExprCase e alts def)
 expr (ExprCase e ((p:ps,alt):alts) def) =
-	expr (ExprCond (ExprBinary Equals e p) alt (ExprCase e ((ps,alt):alts) def))
+    expr (ExprCond (ExprBinary Equals e p) alt (ExprCase e ((ps,alt):alts) def))
 expr x = text (show x)
 
 

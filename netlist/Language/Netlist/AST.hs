@@ -38,7 +38,7 @@
 module Language.Netlist.AST where
 
 import Data.Binary      ( Binary(..), putWord8, getWord8 )
-import Data.Generics	( Data, Typeable )
+import Data.Generics    ( Data, Typeable )
 
 -- -----------------------------------------------------------------------------
 
