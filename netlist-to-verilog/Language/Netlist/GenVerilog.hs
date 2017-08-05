@@ -103,17 +103,15 @@ mk_decl (ProcessDecl (Event (mk_expr -> clk) edge) Nothing stmt)
     -- s = V.IfStmt cond (Just (mk_stmt stmt)) Nothing
     -- (event, cond) = edge_helper edge clk
 
--- mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
---          (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
---   = [V.AlwaysItem (V.EventControlStmt e (Just s1))]
---   where
---     e = V.EventControlExpr (V.EventOr clk_event reset_event)
-
---     s1    = V.IfStmt reset_cond (Just (mk_stmt reset_stmt)) (Just s2)
---     s2    = V.IfStmt clk_cond   (Just (mk_stmt stmt)) Nothing
-
---     (clk_event, clk_cond) = edge_helper clk_edge clk
---     (reset_event, reset_cond) = edge_helper reset_edge reset
+mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
+         (Just (Event (mk_expr -> reset) reset_edge, reset_stmt)) stmt)
+  = [V.AlwaysItem (V.EventControlStmt e (Just s1))]
+  where
+    e = V.EventControlExpr (V.EventOr clk_event reset_event)
+    s1    = V.IfStmt reset_cond (Just (mk_stmt reset_stmt)) (Just s2)
+    s2    = V.IfStmt clk_cond   (Just (mk_stmt stmt)) Nothing
+    (clk_event, clk_cond) = edge_helper clk_edge clk
+    (reset_event, reset_cond) = edge_helper reset_edge reset
 
 mk_decl decl =
   error ("Language.Netlist.GenVerilog.mk_decl: unexpected decl "
