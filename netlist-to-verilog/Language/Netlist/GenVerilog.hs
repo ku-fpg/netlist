@@ -115,7 +115,7 @@ mk_decl (ProcessDecl (Event (mk_expr -> clk) clk_edge)
 
 mk_decl decl =
   error ("Language.Netlist.GenVerilog.mk_decl: unexpected decl "
-         ++ show decl) 
+         ++ show decl)
 
 edge_helper :: Edge -> V.Expression -> (V.EventExpr, V.Expression)
 edge_helper PosEdge x = (V.EventPosedge x, x)
@@ -147,6 +147,19 @@ mk_stmt (FunCallStmt x es)
   = error ("FunCallStmt " ++ x)
 
 mk_lit :: Maybe Size -> ExprLit -> V.Number
+-- | A real number: sign, integral integral, fractional part, exponent sign,
+-- and exponent value
+-- | RealNum (Maybe Sign) String (Maybe String) (Maybe (Maybe Sign, String))
+-- data Sign
+--   = Pos | Neg
+-- mk_lit mb_sz (ExprFloat x) = V.RealNum sn int frac es ev
+mk_lit mb_sz (ExprFloat x) = V.RealNum sn (show int) frac Nothing
+  where  sn  | x < 0.0   = Just V.Neg
+             | otherwise = Nothing
+         int | x < 0.0   = abs $ floor x + 1
+             | otherwise = floor x
+         frac            = Just . tail . tail . show $ abs x - (fromIntegral int)
+
 mk_lit mb_sz lit
   = V.IntNum Nothing (fmap show mb_sz) mb_base str
   -- Note that this does not truncate 'str' if its length is more than the size.
@@ -163,6 +176,7 @@ mk_lit mb_sz lit
                  Nothing          -> (show x, Nothing)
           ExprBit b               -> ([bit_char b], Nothing)
           ExprBitVector bs        -> (map bit_char bs, Just V.BinBase)
+          _                       -> error $ "This should never happen!" ++ (show lit)
 
 bit_char :: Bit -> Char
 bit_char T = '1'
@@ -252,7 +266,7 @@ binary_op RotateRight  = error "GenVerilog: no right-rotate operator in Verilog"
 
 binary_op op =
   error ("Language.Netlist.GenVerilog.binary_op: unexpected op "
-         ++ show op) 
+         ++ show op)
 
 
 -- -----------------------------------------------------------------------------
