@@ -158,6 +158,8 @@ data ExprLit
   = ExprNum Integer               -- ^ a number
   | ExprBit Bit                   -- ^ a single bit.  in vhdl, bits are different than 1-bit bitvectors
   | ExprBitVector [Bit]
+  | ExprFloat  Float              -- ^ a floating point literal
+-- | ExprDouble Double             -- ^ a double precision floating point literal
   deriving (Eq, Ord, Show, Data, Typeable)
 
 data Bit
@@ -440,6 +442,10 @@ instance Binary ExprLit where
                                  put x1
                 ExprBitVector x1 -> do putWord8 2
                                        put x1
+                ExprFloat  x1 -> do putWord8 3
+                                    put x1
+                -- ExprDouble x1 -> do putWord8 4
+                --                     put x1
         get
           = do i <- getWord8
                case i of
@@ -449,6 +455,10 @@ instance Binary ExprLit where
                            return (ExprBit x1)
                    2 -> do x1 <- get
                            return (ExprBitVector x1)
+                   3 -> do x1 <- get
+                           return (ExprFloat x1)
+                   -- 4 -> do x1 <- get
+                   --         return (ExprDouble x1)
                    _ -> error "Corrupted binary data for ExprLit"
 
 
