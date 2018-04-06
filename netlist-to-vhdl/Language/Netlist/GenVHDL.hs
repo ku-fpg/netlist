@@ -11,10 +11,14 @@
 -- Translates a Netlist AST ('Language.Netlist.AST') to VHDL.
 --------------------------------------------------------------------------------
 
+{-# LANGUAGE CPP #-}
 module Language.Netlist.GenVHDL(genVHDL) where
 
 import Language.Netlist.AST
 
+#if MIN_VERSION_base(4,11,0)
+import Prelude hiding ((<>))
+#endif
 import Text.PrettyPrint
 import Data.Maybe(catMaybes, mapMaybe)
 
