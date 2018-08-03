@@ -15,6 +15,7 @@
 
 module Language.Verilog.PrettyPrint where
 
+import Prelude hiding ((<>))
 import Data.Maybe               ( fromMaybe )
 import Text.PrettyPrint
 
