@@ -14,10 +14,6 @@ build-type:         Simple
 cabal-version:      >=1.6
 extra-source-files: README.md
 
-flag base4
-   Description: Compile using base-4 instead of base-3
-   Default: True
-
 Library
   ghc-options:          -Wall
 
@@ -29,8 +25,4 @@ Library
                         Language.Verilog.PrettyPrint,
                         Language.Verilog
 
-  build-depends:      binary, pretty, parsec == 3.*, mtl
-  if flag(base4)
-     build-depends:   base == 4.*, syb
-  else
-     build-depends:   base == 3.*
+  build-depends:      base == 4.*, syb, binary, pretty, parsec == 3.*, mtl

@@ -1,3 +1,5 @@
 dist/
 package.conf.d/
+.stack-work/
 *~
+*.swp
